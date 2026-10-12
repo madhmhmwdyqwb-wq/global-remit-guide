@@ -140,5 +140,16 @@ let lang='en';const $=id=>document.getElementById(id);function calculate(){const
     ?.addEventListener("click", updatePage);
 })();
 </script>
-</body>
+
+<script>
+["from", "to"].forEach(function(id) {
+  document.getElementById(id).addEventListener(
+    "change", function() {
+      document.getElementById("rate").value = "";
+      document.getElementById("calculate").click();
+    }
+  );
+});
+</script></body>
+
 </html>
