@@ -108,4 +108,37 @@ let lang='en';const $=id=>document.getElementById(id);function calculate(){const
 </script>
 
 </body>
+<script>
+(function () {
+  const note = document.getElementById("disclaimer");
+  const link = document.querySelector('a[href="global-compare.html"]');
+
+  function updatePage() {
+    const ar = document.documentElement.lang === "ar";
+
+    if (note) {
+      note.textContent = ar
+        ? "هذه أداة تعليمية. نوفر أسعار صرف مرجعية لبعض العملات ومقارنة يدوية بين عروض الشركات، وليس أسعار تحويل مباشرة. تأكد من الأسعار والرسوم وتوفر الخدمة مع الشركة."
+        : "Educational tool. We offer reference exchange rates for some currencies and manual comparison of provider quotes, not live transfer offers. Confirm rates, fees and availability with the provider.";
+    }
+
+    if (link) {
+      link.textContent = ar
+        ? "🌍 مقارنة التحويلات العالمية"
+        : "🌍 Compare transfers worldwide";
+
+      link.style.cssText =
+        "display:block;background:#1769ba;color:white;" +
+        "padding:16px;border-radius:12px;" +
+        "text-align:center;text-decoration:none;" +
+        "font-weight:700;max-width:740px;margin:20px auto;";
+    }
+  }
+
+  updatePage();
+  document.getElementById("language")
+    ?.addEventListener("click", updatePage);
+})();
+</script>
+</body>
 </html>
