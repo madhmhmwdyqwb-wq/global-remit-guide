@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Free bilingual money transfer cost calculator. Understand fees and exchange rates before sending money internationally.">
+<title>Global Remit Guide | دليل التحويلات العالمية</title>
+<style>
+:root{font-family:system-ui,-apple-system,Arial,sans-serif;color:#16243a;background:#f4f7fb}*{box-sizing:border-box}body{margin:0}header{background:#123b72;color:white;padding:20px 16px}header .wrap{max-width:740px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}h1{font-size:1.4rem;margin:0}button{cursor:pointer}header button{background:#fff;color:#123b72;border:0;border-radius:10px;padding:10px;font-weight:700}main{max-width:740px;margin:24px auto;padding:0 16px}.intro{text-align:center;margin-bottom:20px}.intro h2{font-size:1.7rem;margin:0 0 8px}.intro p{line-height:1.6;color:#475569}.card{background:white;border-radius:18px;padding:22px;box-shadow:0 5px 24px #16345b14}label{display:block;font-weight:650;margin:15px 0 7px}input,select{display:block;width:100%;padding:13px;border:1px solid #b9c5d4;border-radius:10px;font:inherit;background:white;color:#16243a}input:focus,select:focus{outline:2px solid #1769ba}button.calculate{width:100%;border:0;background:#1769ba;color:white;border-radius:10px;font-size:1rem;font-weight:700;padding:14px;margin-top:20px}.result{background:#edf6ff;border-radius:12px;padding:18px;margin-top:18px;line-height:1.7}.result strong{font-size:1.4rem}small,.note{color:#516176;line-height:1.6}footer{text-align:center;padding:26px 15px;font-size:.85rem;color:#566478}html[dir=rtl] .card{text-align:right}html[dir=rtl] .intro{text-align:center}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>🌍 Global Remit Guide</h1><button id="language" type="button">العربية</button></div></header>
+<main>
+<section class="intro"><h2 id="heading">Know what your recipient gets</h2><p id="subtitle">A simple international transfer calculator. Enter your own exchange rate and fees to estimate the amount received.</p></section>
+<section class="card">
+<label id="amountLabel" for="amount">Amount you send</label><input id="amount" type="number" min="0" step="any" value="100" inputmode="decimal">
+<label id="fromLabel" for="from">Sending currency</label><select id="from"><option>CAD</option><option>USD</option><option>EUR</option><option>GBP</option><option>AED</option><option>SAR</option><option>SDG</option><option>EGP</option><option>INR</option><option>NGN</option></select>
+<label id="toLabel" for="to">Receiving currency</label><select id="to"><option>SDG</option><option>USD</option><option>CAD</option><option>EUR</option><option>GBP</option><option>AED</option><option>SAR</option><option>EGP</option><option>INR</option><option>NGN</option></select>
+<label id="rateLabel" for="rate">Exchange rate (1 sending unit = how many receiving units?)</label><input id="rate" type="number" min="0" step="any" placeholder="e.g. 2.5" inputmode="decimal">
+<label id="feeLabel" for="fee">Transfer fee (in sending currency)</label><input id="fee" type="number" min="0" step="any" value="0" inputmode="decimal">
+<button class="calculate" id="calculate" type="button">Calculate estimate</button>
+<div class="result" id="result" role="status" aria-live="polite">Enter an exchange rate to calculate your estimate.</div>
+<p class="note" id="disclaimer">Educational calculator only. We do not provide live exchange rates, compare providers, or transfer money. Confirm rates, fees and availability with your provider before sending.</p>
+</section>
+</main>
+<footer id="footer">© 2026 Global Remit Guide · Free educational tool</footer>
+<script>
+const translations={en:{lang:'العربية',heading:'Know what your recipient gets',subtitle:'A simple international transfer calculator. Enter your own exchange rate and fees to estimate the amount received.',amountLabel:'Amount you send',fromLabel:'Sending currency',toLabel:'Receiving currency',rateLabel:'Exchange rate (1 sending unit = how many receiving units?)',feeLabel:'Transfer fee (in sending currency)',calculate:'Calculate estimate',prompt:'Enter an exchange rate to calculate your estimate.',invalid:'Please enter valid amounts, a rate above zero, and a fee no greater than the amount.',receive:'Estimated amount received',net:'Amount after fee',disclaimer:'Educational calculator only. We do not provide live exchange rates, compare providers, or transfer money. Confirm rates, fees and availability with your provider before sending.',footer:'© 2026 Global Remit Guide · Free educational tool'},ar:{lang:'English',heading:'اعرف كم يصل للمستلم',subtitle:'حاسبة بسيطة للتحويلات الدولية. أدخل سعر الصرف والرسوم بنفسك لمعرفة المبلغ المتوقع وصوله.',amountLabel:'المبلغ الذي سترسله',fromLabel:'عملة الإرسال',toLabel:'عملة الاستلام',rateLabel:'سعر الصرف (كم تساوي وحدة من عملة الإرسال بعملة الاستلام؟)',feeLabel:'رسوم التحويل (بعملة الإرسال)',calculate:'احسب المبلغ المتوقع',prompt:'أدخل سعر الصرف لحساب المبلغ المتوقع.',invalid:'أدخل مبالغ صحيحة وسعر صرف أكبر من صفر، ورسوم لا تتجاوز المبلغ.',receive:'المبلغ المتوقع وصوله',net:'المبلغ بعد خصم الرسوم',disclaimer:'هذه حاسبة تعليمية فقط. لا نوفر أسعار صرف مباشرة أو مقارنة بين الشركات أو خدمة تحويل أموال. تأكد من السعر والرسوم وتوفر الخدمة مع شركة التحويل قبل الإرسال.',footer:'© 2026 Global Remit Guide · أداة تعليمية مجانية'}};
+let lang='en';const $=id=>document.getElementById(id);function calculate(){const a=Number($('amount').value),r=Number($('rate').value),f=Number($('fee').value),t=translations[lang];if(!$('amount').value||!$('rate').value||!$('fee').value||![a,r,f].every(Number.isFinite)||a<=0||r<=0||f<0||f>a){$('result').textContent=(!$('rate').value)?t.prompt:t.invalid;return;}const net=a-f;const fmt=n=>n.toLocaleString(lang==='ar'?'ar':'en',{maximumFractionDigits:2});$('result').innerHTML='';const heading=document.createElement('div');heading.textContent=t.receive;const strong=document.createElement('strong');strong.textContent=fmt(net*r)+' '+$('to').value;const details=document.createElement('div');details.textContent=t.net+': '+fmt(net)+' '+$('from').value;$('result').append(heading,strong,details)}function render(){const t=translations[lang];document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';Object.keys(t).forEach(k=>{if($(k))$(k).textContent=t[k]});calculate()}$('language').addEventListener('click',()=>{lang=lang==='en'?'ar':'en';render()});$('calculate').addEventListener('click',calculate);['amount','rate','fee','from','to'].forEach(id=>$(id).addEventListener('change',calculate));render();
+</script>
+</body>
+</html>
