@@ -28,6 +28,84 @@
 <script>
 const translations={en:{lang:'العربية',heading:'Know what your recipient gets',subtitle:'A simple international transfer calculator. Enter your own exchange rate and fees to estimate the amount received.',amountLabel:'Amount you send',fromLabel:'Sending currency',toLabel:'Receiving currency',rateLabel:'Exchange rate (1 sending unit = how many receiving units?)',feeLabel:'Transfer fee (in sending currency)',calculate:'Calculate estimate',prompt:'Enter an exchange rate to calculate your estimate.',invalid:'Please enter valid amounts, a rate above zero, and a fee no greater than the amount.',receive:'Estimated amount received',net:'Amount after fee',disclaimer:'Educational calculator only. We do not provide live exchange rates, compare providers, or transfer money. Confirm rates, fees and availability with your provider before sending.',footer:'© 2026 Global Remit Guide · Free educational tool'},ar:{lang:'English',heading:'اعرف كم يصل للمستلم',subtitle:'حاسبة بسيطة للتحويلات الدولية. أدخل سعر الصرف والرسوم بنفسك لمعرفة المبلغ المتوقع وصوله.',amountLabel:'المبلغ الذي سترسله',fromLabel:'عملة الإرسال',toLabel:'عملة الاستلام',rateLabel:'سعر الصرف (كم تساوي وحدة من عملة الإرسال بعملة الاستلام؟)',feeLabel:'رسوم التحويل (بعملة الإرسال)',calculate:'احسب المبلغ المتوقع',prompt:'أدخل سعر الصرف لحساب المبلغ المتوقع.',invalid:'أدخل مبالغ صحيحة وسعر صرف أكبر من صفر، ورسوم لا تتجاوز المبلغ.',receive:'المبلغ المتوقع وصوله',net:'المبلغ بعد خصم الرسوم',disclaimer:'هذه حاسبة تعليمية فقط. لا نوفر أسعار صرف مباشرة أو مقارنة بين الشركات أو خدمة تحويل أموال. تأكد من السعر والرسوم وتوفر الخدمة مع شركة التحويل قبل الإرسال.',footer:'© 2026 Global Remit Guide · أداة تعليمية مجانية'}};
 let lang='en';const $=id=>document.getElementById(id);function calculate(){const a=Number($('amount').value),r=Number($('rate').value),f=Number($('fee').value),t=translations[lang];if(!$('amount').value||!$('rate').value||!$('fee').value||![a,r,f].every(Number.isFinite)||a<=0||r<=0||f<0||f>a){$('result').textContent=(!$('rate').value)?t.prompt:t.invalid;return;}const net=a-f;const fmt=n=>n.toLocaleString(lang==='ar'?'ar':'en',{maximumFractionDigits:2});$('result').innerHTML='';const heading=document.createElement('div');heading.textContent=t.receive;const strong=document.createElement('strong');strong.textContent=fmt(net*r)+' '+$('to').value;const details=document.createElement('div');details.textContent=t.net+': '+fmt(net)+' '+$('from').value;$('result').append(heading,strong,details)}function render(){const t=translations[lang];document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';Object.keys(t).forEach(k=>{if($(k))$(k).textContent=t[k]});calculate()}$('language').addEventListener('click',()=>{lang=lang==='en'?'ar':'en';render()});$('calculate').addEventListener('click',calculate);['amount','rate','fee','from','to'].forEach(id=>$(id).addEventListener('change',calculate));render();
+</script>  
+<script>
+(function () {
+  const from = document.getElementById("from");
+  const to = document.getElementById("to");
+  const rate = document.getElementById("rate");
+
+  if (!from || !to || !rate) return;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.textContent = "💱 جلب سعر الصرف | Get rate";
+  button.style.cssText =
+    "width:100%;padding:14px;margin:12px 0;" +
+    "background:#1769b4;color:white;border:0;" +
+    "border-radius:12px;font-size:16px;cursor:pointer";
+
+  const status = document.createElement("p");
+  status.setAttribute("aria-live", "polite");
+  status.style.cssText =
+    "font-size:13px;line-height:1.6;color:#475569";
+
+  rate.insertAdjacentElement("afterend", button);
+  button.insertAdjacentElement("afterend", status);
+
+  function resetStatus() {
+    status.textContent = "";
+  }
+
+  from.addEventListener("change", resetStatus);
+  to.addEventListener("change", resetStatus);
+  rate.addEventListener("input", resetStatus);
+
+  button.addEventListener("click", async function () {
+    const base = from.value.toUpperCase();
+    const quote = to.value.toUpperCase();
+
+    button.disabled = true;
+    status.textContent = "جاري جلب السعر... | Loading...";
+
+    try {
+      if (base === quote) {
+        rate.value = "1";
+        status.textContent = "نفس العملة | Same currency";
+      } else {
+        const url =
+          "https://api.frankfurter.dev/v2/rate/" +
+          encodeURIComponent(base) + "/" +
+          encodeURIComponent(quote);
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Rate unavailable");
+
+        const data = await response.json();
+        if (!(Number(data.rate) > 0)) {
+          throw new Error("Invalid rate");
+        }
+
+        rate.value = String(data.rate);
+        status.textContent =
+          "✓ السعر المرجعي | Reference rate: " +
+          data.date + " — Frankfurter. " +
+          "قد يختلف سعر شركة التحويل.";
+      }
+
+      const calculate = document.getElementById("calculate");
+      if (calculate) calculate.click();
+
+    } catch (error) {
+      status.textContent =
+        "⚠️ السعر غير متاح لهذه العملات حالياً. " +
+        "أدخل السعر يدوياً. | Rate unavailable; enter manually.";
+    } finally {
+      button.disabled = false;
+    }
+  });
+})();
 </script>
+
 </body>
 </html>
